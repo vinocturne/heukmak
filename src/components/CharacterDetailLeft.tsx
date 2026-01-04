@@ -112,7 +112,7 @@ export function CharacterDetailLeft({
         </div>
 
         {/* 타이틀 카테고리 카드들 */}
-        <div className="grid grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
           <TitleCategoryCard category="Attack" titles={titlesByCategory.Attack} />
           <TitleCategoryCard
             category="Defense"

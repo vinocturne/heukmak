@@ -24,15 +24,15 @@ export function TitleCategoryCard({
   return (
     <div className="flex flex-col rounded-lg border border-border/40 overflow-hidden">
       {/* 상단 헤더 */}
-      <div className="flex items-center gap-3 p-3 bg-gray-900">
-        <div className="w-12 h-12 flex-shrink-0">
+      <div className="relative md:flex md:items-center md:gap-3 p-3 bg-gray-900">
+        <div className="absolute md:static left-3 top-1/2 -translate-y-1/2 md:translate-y-0 w-12 h-12 flex-shrink-0">
           <img
             src={imagePath}
             alt={CATEGORY_LABELS[category]}
             className="w-full h-full object-contain"
           />
         </div>
-        <div className="flex flex-col flex-1">
+        <div className="flex flex-col w-full text-center md:flex-1">
           <span className="text-sm font-medium">
             {CATEGORY_LABELS[category]}
           </span>
@@ -47,16 +47,15 @@ export function TitleCategoryCard({
       <div className="flex flex-col p-3 bg-card gap-3">
         {titles.map(title => (
           <div key={title.id} className="flex flex-col gap-1">
-            <span className={`text-sm font-medium ${getGradeColor(title.grade)}`}>
+            <span
+              className={`text-sm font-medium ${getGradeColor(title.grade)}`}
+            >
               {title.name}
             </span>
             {title.equipStatList && title.equipStatList.length > 0 && (
               <div className="flex flex-col gap-0.5 pl-2">
                 {title.equipStatList.map((stat, index) => (
-                  <span
-                    key={index}
-                    className="text-xs text-muted-foreground"
-                  >
+                  <span key={index} className="text-xs text-muted-foreground">
                     {stat.desc}
                   </span>
                 ))}

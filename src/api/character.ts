@@ -303,25 +303,13 @@ export interface StatsSummaryResponse {
   }
 }
 
-const API_BASE_URL =
-  import.meta.env.MODE === 'development'
-    ? '/api/search/aion2/search/v2'
-    : import.meta.env.VITE_AION2_API_URL
+const API_BASE_URL = '/api/search/aion2/search/v2'
 
-const CHARACTER_INFO_BASE_URL =
-  import.meta.env.MODE === 'development'
-    ? '/api/character'
-    : import.meta.env.VITE_AION2_CHARACTER_API_URL
+const CHARACTER_INFO_BASE_URL = '/api/character'
 
-const GAME_INFO_BASE_URL =
-  import.meta.env.MODE === 'development'
-    ? '/api/gameinfo'
-    : import.meta.env.VITE_AION2_GAME_INFO_API_URL
+const GAME_INFO_BASE_URL = '/api/gameinfo'
 
-const STATS_SUMMARY_BASE_URL =
-  import.meta.env.MODE === 'development'
-    ? '/api/v1/aion2'
-    : 'https://api.aon2.info/api/v1/aion2'
+const STATS_SUMMARY_BASE_URL = '/api/v1/aion2'
 
 export const PROFILE_IMAGE_BASE_URL = import.meta.env
   .VITE_AION2_PROFILE_IMAGE_URL
@@ -331,10 +319,7 @@ export async function searchCharacter(
 ): Promise<CharacterSearchResponse> {
   const { keyword, serverId = 2006, page = 1, size = 30 } = params
 
-  const url = new URL(
-    `${API_BASE_URL}/character`,
-    import.meta.env.MODE === 'development' ? window.location.origin : undefined
-  )
+  const url = new URL(`${API_BASE_URL}/character`, window.location.origin)
   url.searchParams.append('keyword', keyword)
   url.searchParams.append('serverId', serverId.toString())
   url.searchParams.append('page', page.toString())
@@ -354,10 +339,7 @@ export async function getCharacterInfo(
 ): Promise<CharacterInfo> {
   const { characterId } = params
 
-  const url = new URL(
-    `${CHARACTER_INFO_BASE_URL}/info`,
-    import.meta.env.MODE === 'development' ? window.location.origin : undefined
-  )
+  const url = new URL(`${CHARACTER_INFO_BASE_URL}/info`, window.location.origin)
   url.searchParams.append('lang', 'ko')
   url.searchParams.append('characterId', characterId)
   url.searchParams.append('serverId', '2006')
@@ -374,7 +356,7 @@ export async function getCharacterInfo(
 export async function getClassInfo(): Promise<{ classList: ClassItem[] }> {
   const url = new URL(
     `${GAME_INFO_BASE_URL}/classes?lang=ko`,
-    import.meta.env.MODE === 'development' ? window.location.origin : undefined
+    window.location.origin
   )
 
   const response = await fetch(url.toString())
@@ -393,7 +375,7 @@ export async function getCharacterEquipment(
 
   const url = new URL(
     `${CHARACTER_INFO_BASE_URL}/equipment`,
-    import.meta.env.MODE === 'development' ? window.location.origin : undefined
+    window.location.origin
   )
   url.searchParams.append('lang', 'ko')
   url.searchParams.append('characterId', characterId)
@@ -415,7 +397,7 @@ export async function getArcanaItemDetail(
 
   const url = new URL(
     `${CHARACTER_INFO_BASE_URL}/equipment/item`,
-    import.meta.env.MODE === 'development' ? window.location.origin : undefined
+    window.location.origin
   )
   url.searchParams.append('id', id.toString())
   url.searchParams.append('enchantLevel', enchantLevel.toString())

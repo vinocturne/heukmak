@@ -66,20 +66,14 @@ export interface ItemDetail {
   sources: string[]
 }
 
-const ITEM_API_BASE_URL =
-  import.meta.env.MODE === 'development'
-    ? '/api/character/equipment'
-    : import.meta.env.VITE_AION2_CHARACTER_API_URL
+const ITEM_API_BASE_URL = '/api/character/equipment'
 
 export async function getItemDetail(
   params: ItemDetailParams
 ): Promise<ItemDetail> {
   const { id, enchantLevel, characterId, slotPos } = params
 
-  const url = new URL(
-    `${ITEM_API_BASE_URL}/item`,
-    import.meta.env.MODE === 'development' ? window.location.origin : undefined
-  )
+  const url = new URL(`${ITEM_API_BASE_URL}/item`, window.location.origin)
   url.searchParams.append('id', id.toString())
   url.searchParams.append('enchantLevel', enchantLevel.toString())
   url.searchParams.append('characterId', characterId)

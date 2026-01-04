@@ -11,8 +11,8 @@ const MAIN_STAT_TYPES = ['STR', 'AGI', 'DEX', 'WIS', 'INT', 'CON']
 export function StatItem({ stat, isMainStat }: StatItemProps) {
   const isMain = isMainStat ?? MAIN_STAT_TYPES.includes(stat.type)
   const statImagePath = isMain
-    ? `/src/assets/img/stat/stat_${stat.type.toLowerCase()}.png`
-    : `/src/assets/img/stat/stat_lords_${stat.type.toLowerCase()}.png`
+    ? `/img/stat/stat_${stat.type.toLowerCase()}.png`
+    : `/img/stat/stat_lords_${stat.type.toLowerCase()}.png`
 
   return (
     <Popover>

@@ -16,7 +16,7 @@ export function TitleCategoryCard({
   category,
   titles,
 }: TitleCategoryCardProps) {
-  const imagePath = `/src/assets/img/title/title_icon_${category.toLowerCase()}.png`
+  const imagePath = `/img/title/title_icon_${category.toLowerCase()}.png`
 
   const totalOwned = titles.reduce((sum, title) => sum + title.ownedCount, 0)
   const totalCount = titles.reduce((sum, title) => sum + title.totalCount, 0)

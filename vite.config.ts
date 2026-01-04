@@ -24,6 +24,11 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
+      '/api/v1/aion2': {
+        target: 'https://api.aon2.info',
+        changeOrigin: true,
+        secure: false,
+      },
       '/api': {
         target: 'https://aion2.plaync.com',
         changeOrigin: true,

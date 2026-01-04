@@ -193,6 +193,116 @@ export interface ClassItem {
   text: string
 }
 
+export interface SubSkill {
+  id: number
+  level: number
+  icon: string
+  name: string
+}
+
+export interface MainStat {
+  id: string
+  name: string
+  value: string
+  extra: string
+  exceed: boolean
+}
+
+export interface SetItem {
+  id: number
+  name: string
+  grade: string
+  equipped?: boolean
+  children?: SetItem[]
+}
+
+export interface SetBonus {
+  degree: number
+  descriptions: string[]
+}
+
+export interface ArcanaSet {
+  id: string
+  name: string
+  equippedCount: number
+  items: SetItem[]
+  bonuses: SetBonus[]
+}
+
+export interface ArcanaItemDetail {
+  id: number
+  name: string
+  grade: string
+  gradeName: string
+  icon: string
+  level: number
+  levelValue: number
+  enchantLevel: number
+  storable: boolean
+  tradable: boolean
+  tradablePersonal: boolean
+  enchantable: boolean
+  decomposable: boolean
+  maxEnchantLevel: number
+  categoryName: string
+  type: string
+  equipLevel: number
+  subStatCount: number
+  subSkillCountMax: number
+  subStatRandom: boolean
+  mainStats: MainStat[]
+  soulBindRate: string
+  subSkills: SubSkill[]
+  set: ArcanaSet
+  favorite: boolean
+}
+
+export interface ArcanaItemParams {
+  id: number
+  enchantLevel: number
+  characterId: string
+  slotPos: number
+}
+
+export interface StatSummaryItem {
+  id: string
+  name: string
+  totalValue: number
+  totalExtra: number
+}
+
+export interface SkillSummaryItem {
+  skillId: number
+  skillName: string
+  totalLevel: number
+  category: string
+  iconUrl: string
+}
+
+export interface StatsSummaryResponse {
+  data: {
+    characterId: string
+    characterName: string
+    className: string
+    serverId: number
+    totalStats: {
+      stats: StatSummaryItem[]
+    }
+    mainStats: {
+      stats: StatSummaryItem[]
+    }
+    subStats: {
+      stats: StatSummaryItem[]
+    }
+    magicStones: {
+      stats: StatSummaryItem[]
+    }
+    skills: {
+      skills: SkillSummaryItem[]
+    }
+  }
+}
+
 const API_BASE_URL =
   import.meta.env.MODE === 'development'
     ? '/api/search/aion2/search/v2'
@@ -207,6 +317,11 @@ const GAME_INFO_BASE_URL =
   import.meta.env.MODE === 'development'
     ? '/api/gameinfo'
     : import.meta.env.VITE_AION2_GAME_INFO_API_URL
+
+const STATS_SUMMARY_BASE_URL =
+  import.meta.env.MODE === 'development'
+    ? '/api/v1/aion2'
+    : 'https://api.aon2.info/api/v1/aion2'
 
 export const PROFILE_IMAGE_BASE_URL = import.meta.env
   .VITE_AION2_PROFILE_IMAGE_URL
@@ -288,6 +403,45 @@ export async function getCharacterEquipment(
 
   if (!response.ok) {
     throw new Error('Failed to fetch character equipment')
+  }
+
+  return response.json()
+}
+
+export async function getArcanaItemDetail(
+  params: ArcanaItemParams
+): Promise<ArcanaItemDetail> {
+  const { id, enchantLevel, characterId, slotPos } = params
+
+  const url = new URL(
+    `${CHARACTER_INFO_BASE_URL}/equipment/item`,
+    import.meta.env.MODE === 'development' ? window.location.origin : undefined
+  )
+  url.searchParams.append('id', id.toString())
+  url.searchParams.append('enchantLevel', enchantLevel.toString())
+  url.searchParams.append('characterId', characterId)
+  url.searchParams.append('serverId', '2006')
+  url.searchParams.append('slotPos', slotPos.toString())
+  url.searchParams.append('lang', 'ko')
+
+  const response = await fetch(url.toString())
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch arcana item detail')
+  }
+
+  return response.json()
+}
+
+export async function getStatsSummary(
+  characterId: string
+): Promise<StatsSummaryResponse> {
+  const url = `${STATS_SUMMARY_BASE_URL}/characters/${encodeURIComponent(characterId)}/stats-summary`
+
+  const response = await fetch(url)
+
+  if (!response.ok) {
+    throw new Error('Failed to fetch stats summary')
   }
 
   return response.json()

@@ -8,6 +8,8 @@ import { ToggleGroup, ToggleGroupItem } from './ui/toggle-group'
 import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 import { Drawer, DrawerContent, DrawerTrigger } from './ui/drawer'
 import { EquipmentDetail } from './EquipmentDetail'
+import { getGradeColor } from '@/lib/utils'
+import { ArcanaCard } from './ArcanaCard'
 
 interface CharacterDetailRightProps {
   characterInfo: CharacterInfo
@@ -64,22 +66,19 @@ export function CharacterDetailRight({
     })
   }, [selectedTab, characterEquipment])
 
-  const getGradeColor = (grade: string | null) => {
-    switch (grade) {
-      case 'Unique':
-        return 'text-yellow-400'
-      case 'Legend':
-        return 'text-blue-400'
-      case 'Epic':
-        return 'text-red-400'
-      case 'Rare':
-        return 'text-green-400'
-      case 'Special':
-        return 'text-purple-400'
-      default:
-        return 'text-foreground'
-    }
-  }
+  // 아르카나 리스트 필터링
+  const arcanaList = useMemo(() => {
+    const allItems = Array.isArray(characterEquipment)
+      ? characterEquipment
+      : (characterEquipment as any).equipment?.equipmentList || []
+
+    return allItems
+      .filter(
+        (item: EquipmentItem) =>
+          item.slotPosName && item.slotPosName.startsWith('Arcana')
+      )
+      .sort((a: EquipmentItem, b: EquipmentItem) => a.slotPos - b.slotPos)
+  }, [characterEquipment])
 
   return (
     <div className="flex flex-col gap-3 bg-card p-4 rounded-lg border border-border">
@@ -141,7 +140,7 @@ export function CharacterDetailRight({
                     <div className="relative w-5 h-5 flex-shrink-0">
                       <div className="absolute inset-0 bg-blue-600 transform rotate-45" />
                       <div className="absolute inset-0 flex items-center justify-center">
-                        <span className="text-white text-[10px] font-bold z-10">
+                        <span className="text-white text-[10px] font-bold z-1">
                           {item.exceedLevel}
                         </span>
                       </div>
@@ -206,6 +205,78 @@ export function CharacterDetailRight({
           )}
         </div>
       </section>
+
+      {/* 펫/날개 섹션 */}
+      {(characterEquipment?.petwing?.pet || characterEquipment?.petwing?.wing) && (
+        <section className="flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <span className="font-hyeon text-lg">펫 / 날개</span>
+          </div>
+
+          <div className="flex flex-col gap-2">
+            {/* 펫 정보 */}
+            {characterEquipment.petwing.pet && (
+              <div className="flex items-center gap-3 p-2 hover:bg-accent/50 transition-colors border-b border-border/40">
+                <div className="relative w-10 h-10 flex-shrink-0 bg-black/20 rounded border border-border overflow-hidden">
+                  <img
+                    src={characterEquipment.petwing.pet.icon}
+                    alt={characterEquipment.petwing.pet.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <span className="text-sm font-medium">
+                  {characterEquipment.petwing.pet.name} Lv{' '}
+                  {characterEquipment.petwing.pet.level}
+                </span>
+              </div>
+            )}
+
+            {/* 날개 정보 */}
+            {characterEquipment.petwing.wing && (
+              <div className="flex items-center gap-3 p-2 hover:bg-accent/50 transition-colors border-b border-border/40 last:border-0">
+                <div className="relative w-10 h-10 flex-shrink-0 bg-black/20 rounded border border-border overflow-hidden">
+                  <img
+                    src={characterEquipment.petwing.wing.icon}
+                    alt={characterEquipment.petwing.wing.name}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+                <div className="flex items-center gap-2">
+                  {characterEquipment.petwing.wing.enchantLevel > 0 && (
+                    <span className="text-sm font-bold">
+                      +{characterEquipment.petwing.wing.enchantLevel}
+                    </span>
+                  )}
+                  <span
+                    className={`text-sm font-medium ${getGradeColor(characterEquipment.petwing.wing.grade)}`}
+                  >
+                    {characterEquipment.petwing.wing.name}
+                  </span>
+                </div>
+              </div>
+            )}
+          </div>
+        </section>
+      )}
+
+      {/* 아르카나 섹션 */}
+      {arcanaList.length > 0 && (
+        <section className="flex flex-col">
+          <div className="flex justify-between items-center mb-4">
+            <span className="font-hyeon text-lg">아르카나</span>
+          </div>
+
+          <div className="flex flex-col md:grid md:grid-cols-5 gap-3">
+            {arcanaList.map((arcana: EquipmentItem) => (
+              <ArcanaCard
+                key={arcana.id}
+                arcanaItem={arcana}
+                characterId={characterInfo.profile.characterId}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

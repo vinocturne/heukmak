@@ -116,8 +116,6 @@ export default function CharacterDetail() {
     )
   }
 
-  console.log(classesInfo)
-
   return (
     <div className="mb-8">
       <div className="flex items-center gap-4 mb-4">

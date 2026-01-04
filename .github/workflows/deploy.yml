@@ -21,6 +21,11 @@ jobs:
         run: npm install
 
       - name: Build
+        env:
+          VITE_AION2_API_URL: ${{ secrets.VITE_AION2_API_URL }}
+          VITE_AION2_PROFILE_IMAGE_URL: ${{ secrets.VITE_AION2_PROFILE_IMAGE_URL }}
+          VITE_AION2_GAME_INFO_API_URL: ${{ secrets.VITE_AION2_GAME_INFO_API_URL }}
+          VITE_AION2_CHARACTER_API_URL: ${{ secrets.VITE_AION2_CHARACTER_API_URL }}
         run: npm run build
 
       - name: Configure AWS credentials
